@@ -3,5 +3,5 @@
   "contract": "data-request",
   "major_version": 1,
   "schema": "contracts/data-request/v1/chart-of-accounts.json",
-  "sha256": "51a5611b4c7fc999e4c5cf9aae6390a5734d1f7105e36466c9059a1c24ade770"
+  "sha256": "edfddeaa05ca6f73504a97bdc3acc0f10bf2684c7eab2f996bea0a7f94624156"
 }
