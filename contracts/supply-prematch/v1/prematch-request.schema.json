@@ -1,0 +1,197 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://contracts.sunmoonai.com/knowfeed/supply-prematch/v1/prematch-request.schema.json",
+  "$defs": {
+    "ConditionsV1": {
+      "additionalProperties": false,
+      "description": "可接受的来源限制与用途条件（例如要随公开专家用，就要 via_expert 及更宽的）。",
+      "properties": {
+        "min_license": {
+          "anyOf": [
+            {
+              "enum": [
+                "self",
+                "via_expert",
+                "sale"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Min License"
+        },
+        "channels": {
+          "description": "只用这几条渠道；空是不限",
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 20,
+          "title": "Channels",
+          "type": "array"
+        }
+      },
+      "title": "ConditionsV1",
+      "type": "object"
+    },
+    "PrematchItemV1": {
+      "additionalProperties": false,
+      "description": "问的一项：一条描述，或一个网址（给网址的需求）。两样给且只给一样。",
+      "properties": {
+        "ref": {
+          "description": "调用方自己的编号，原样带回",
+          "maxLength": 64,
+          "minLength": 1,
+          "title": "Ref",
+          "type": "string"
+        },
+        "key": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PrematchKeyV1"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "url": {
+          "anyOf": [
+            {
+              "maxLength": 2000,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Url"
+        },
+        "readings": {
+          "items": {
+            "enum": [
+              "original",
+              "text",
+              "pages",
+              "table"
+            ],
+            "type": "string"
+          },
+          "maxItems": 4,
+          "title": "Readings",
+          "type": "array"
+        }
+      },
+      "required": [
+        "ref"
+      ],
+      "title": "PrematchItemV1",
+      "type": "object"
+    },
+    "PrematchKeyV1": {
+      "additionalProperties": false,
+      "description": "一条描述（SDD 0049），同需求单的描述键。",
+      "properties": {
+        "subject": {
+          "maxLength": 64,
+          "minLength": 1,
+          "title": "Subject",
+          "type": "string"
+        },
+        "doc_type": {
+          "maxLength": 32,
+          "minLength": 1,
+          "title": "Doc Type",
+          "type": "string"
+        },
+        "period_start": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Period Start"
+        },
+        "period_end": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Period End"
+        },
+        "edition": {
+          "default": "full",
+          "enum": [
+            "full",
+            "summary",
+            "english"
+          ],
+          "title": "Edition",
+          "type": "string"
+        },
+        "topics": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 12,
+          "title": "Topics",
+          "type": "array"
+        },
+        "industry": {
+          "anyOf": [
+            {
+              "maxLength": 16,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Industry"
+        }
+      },
+      "required": [
+        "subject",
+        "doc_type"
+      ],
+      "title": "PrematchKeyV1",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "items": {
+      "items": {
+        "$ref": "#/$defs/PrematchItemV1"
+      },
+      "maxItems": 50,
+      "minItems": 1,
+      "title": "Items",
+      "type": "array"
+    },
+    "conditions": {
+      "$ref": "#/$defs/ConditionsV1"
+    }
+  },
+  "required": [
+    "items"
+  ],
+  "title": "knowfeed-supply-prematch v1 request",
+  "type": "object"
+}

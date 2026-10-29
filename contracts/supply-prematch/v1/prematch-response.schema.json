@@ -1,0 +1,182 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://contracts.sunmoonai.com/knowfeed/supply-prematch/v1/prematch-response.schema.json",
+  "$defs": {
+    "CandidateV1": {
+      "description": "一条候选渠道（按切合时试的先后）。",
+      "properties": {
+        "channel_id": {
+          "title": "Channel Id",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "license": {
+          "enum": [
+            "self",
+            "via_expert",
+            "sale"
+          ],
+          "title": "License",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "active",
+            "paused"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "readings": {
+          "description": "这条渠道能给的读法",
+          "items": {
+            "enum": [
+              "original",
+              "text",
+              "pages",
+              "table"
+            ],
+            "type": "string"
+          },
+          "title": "Readings",
+          "type": "array"
+        },
+        "eta_seconds": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "按队列与限速粗算还要多久；渠道暂停时算不出，是 null",
+          "title": "Eta Seconds"
+        }
+      },
+      "required": [
+        "channel_id",
+        "name",
+        "license",
+        "status",
+        "readings",
+        "eta_seconds"
+      ],
+      "title": "CandidateV1",
+      "type": "object"
+    },
+    "PrematchAnswerV1": {
+      "properties": {
+        "ref": {
+          "title": "Ref",
+          "type": "string"
+        },
+        "status": {
+          "description": "available 这类能取；unavailable 取不到；site_pending 网站待审（审过才取）；conditions_unmet 能取的渠道都不满足给的条件",
+          "enum": [
+            "available",
+            "unavailable",
+            "site_pending",
+            "conditions_unmet"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "取不到的原因编码：no_channel（这类数据还取不到）、subject_unsupported、site_rejected、site_unregistered（没登记的网站，提了就自动建待审）、site_pending",
+          "title": "Reason"
+        },
+        "license": {
+          "anyOf": [
+            {
+              "enum": [
+                "self",
+                "via_expert",
+                "sale"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "先试的那条渠道取来的数据属于哪一档",
+          "title": "License"
+        },
+        "eta_seconds": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "先试的那条渠道的预计",
+          "title": "Eta Seconds"
+        },
+        "readings_missing": {
+          "description": "要了、但先试的那条渠道给不了的读法",
+          "items": {
+            "enum": [
+              "original",
+              "text",
+              "pages",
+              "table"
+            ],
+            "type": "string"
+          },
+          "title": "Readings Missing",
+          "type": "array"
+        },
+        "candidates": {
+          "items": {
+            "$ref": "#/$defs/CandidateV1"
+          },
+          "title": "Candidates",
+          "type": "array"
+        }
+      },
+      "required": [
+        "ref",
+        "status"
+      ],
+      "title": "PrematchAnswerV1",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "contract": {
+      "const": "knowfeed-supply-prematch/v1",
+      "default": "knowfeed-supply-prematch/v1",
+      "title": "Contract",
+      "type": "string"
+    },
+    "items": {
+      "items": {
+        "$ref": "#/$defs/PrematchAnswerV1"
+      },
+      "title": "Items",
+      "type": "array"
+    }
+  },
+  "required": [
+    "items"
+  ],
+  "title": "knowfeed-supply-prematch v1 response",
+  "type": "object"
+}
