@@ -1,0 +1,157 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://contracts.sunmoonai.com/knowfeed/supply-status/v1/demand-status.schema.json",
+  "$defs": {
+    "DemandStatusItemV1": {
+      "additionalProperties": false,
+      "properties": {
+        "item_id": {
+          "maxLength": 64,
+          "minLength": 1,
+          "title": "Item Id",
+          "type": "string"
+        },
+        "confirmation_item": {
+          "description": "确认里的条目编号（c1、c2……）",
+          "maxLength": 16,
+          "minLength": 1,
+          "title": "Confirmation Item",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "accepted",
+            "fetching",
+            "ready",
+            "partial",
+            "failed",
+            "unsatisfiable",
+            "cancelled",
+            "timeout"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "maxLength": 200,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "结束的原因编码，如 no_channel、channel_has_none、readings_incomplete",
+          "title": "Reason"
+        },
+        "updated_at": {
+          "format": "date-time",
+          "title": "Updated At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "item_id",
+        "confirmation_item",
+        "status",
+        "updated_at"
+      ],
+      "title": "DemandStatusItemV1",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "一张需求单的状态变了。",
+  "properties": {
+    "contract": {
+      "const": "knowfeed-supply-status/v1",
+      "default": "knowfeed-supply-status/v1",
+      "title": "Contract",
+      "type": "string"
+    },
+    "event_id": {
+      "description": "每条通知不同",
+      "maxLength": 64,
+      "minLength": 1,
+      "title": "Event Id",
+      "type": "string"
+    },
+    "demand_id": {
+      "maxLength": 64,
+      "minLength": 1,
+      "title": "Demand Id",
+      "type": "string"
+    },
+    "app": {
+      "description": "提这张单的应用",
+      "enum": [
+        "knowbench",
+        "knowlab"
+      ],
+      "title": "App",
+      "type": "string"
+    },
+    "owner": {
+      "description": "归属用户",
+      "maxLength": 255,
+      "minLength": 1,
+      "title": "Owner",
+      "type": "string"
+    },
+    "task_ref": {
+      "anyOf": [
+        {
+          "maxLength": 255,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Task Ref"
+    },
+    "status": {
+      "description": "需求单的汇总状态",
+      "enum": [
+        "accepted",
+        "fetching",
+        "ready",
+        "partial",
+        "failed",
+        "unsatisfiable",
+        "cancelled",
+        "timeout"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "items": {
+      "items": {
+        "$ref": "#/$defs/DemandStatusItemV1"
+      },
+      "maxItems": 50,
+      "minItems": 1,
+      "title": "Items",
+      "type": "array"
+    },
+    "occurred_at": {
+      "format": "date-time",
+      "title": "Occurred At",
+      "type": "string"
+    }
+  },
+  "required": [
+    "event_id",
+    "demand_id",
+    "app",
+    "owner",
+    "status",
+    "items",
+    "occurred_at"
+  ],
+  "title": "knowfeed-supply-status v1 demand status event",
+  "type": "object"
+}
