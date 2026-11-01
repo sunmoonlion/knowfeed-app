@@ -13,11 +13,12 @@ not a valid contract upgrade.
 
 | 文件 | 真源 | 说明 |
 | --- | --- | --- |
+| `knowbase-vocabulary-lock.json` | `knowbase-app/contracts/data-request/v1/vocabulary.json` | 需求、渠道、订阅用的词表副本（`app/domain/supply/vocabulary.py`）：细类与大类、定期报告、事项、版本形态，主体编号的几种写法（`subject_kinds`：证券代码、`org:` 机构编号）与机构编号能采哪些细类（`collectable.org`，政策法规、统计数据）；并列检出 knowbase-app 时 `tests/test_knowbase_vocabulary_lock.py` 核锁与真源一致、副本与真源一致 |
 | `knowbase-chart-lock.json` | `knowbase-app/contracts/data-request/v1/chart-of-accounts.json` | 财报抽表写进 knowbase 标准化层的科目编码照它（`app/application/supply/processing.py` 的 `FIELD_TO_CODE`）；并列检出 knowbase-app 时 `tests/test_knowbase_chart_lock.py` 核锁与真源一致、编码都在真源里 |
 
 ## 提供方的契约（knowfeed 是真源）
 
 | 目录 | 说明 |
 | --- | --- |
-| `supply-status/v1/` | 需求状态推送 `knowfeed-supply-status/v1`（SDD 0045 第 2.5 节「需求状态只由 knowfeed 通知」）：需求项状态每变一次，knowfeed 经发件箱给提这张单的应用发一条，带这张单的汇总状态与每一项。由后端 `app/domain/supply/status_event.py` 的模型生成：在 `knowfeed-backend/app` 下 `python -m app.domain.supply.schema`；`tests/test_supply_status_db.py` 核文件与模型逐字一致。接收端入口 `POST /api/internal/v1/knowfeed/demand-status`，knowfeed 以服务身份调，关系 `supply-status`，scope `<应用>:supply-status`（`contract-manifest.json` 写着）。knowbench、knowlab 的接收端与它们的锁还没做 |
+| `supply-status/v1/` | 需求状态推送 `knowfeed-supply-status/v1`（SDD 0045 第 2.5 节「需求状态只由 knowfeed 通知」）：需求项状态每变一次，knowfeed 经发件箱给提这张单的应用发一条，带这张单的汇总状态与每一项。由后端 `app/domain/supply/status_event.py` 的模型生成：在 `knowfeed-backend/app` 下 `python -m app.domain.supply.schema`；`tests/test_supply_status_db.py` 核文件与模型逐字一致。接收端入口 `POST /api/internal/v1/knowfeed/demand-status`，knowfeed 以服务身份调，关系 `supply-status`，scope `<应用>:supply-status`（`contract-manifest.json` 写着）。knowbench、knowlab 的接收端与它们的锁均已做 |
 | `supply-prematch/v1/` | 预切合 `knowfeed-supply-prematch/v1`（SDD 0045 第四节）：确认之前，应用问这几项（描述或网址）这类能取 / 取不到 / 网站待审 / 不满足给的条件、候选渠道与许可档、按队列与限速估的预计时间（秒）；只查来源目录与队列，不问渠道、不看 knowbase。入口 `POST /api/internal/v1/supply/prematch`，同需求接口的关系 `supply-demand`、scope `knowfeed:supply-demand`。应用把回答连同可接受的条件照存进 knowbase 确认的供给条件快照：`supply = {"conditions": {"min_license": "via_expert", "channels": []}, "prematch": <回答>}`，受理时 knowfeed 只核 `conditions`（许可档下限、只用哪几条渠道），候选渠道都不满足的需求项转「无法满足」附 `conditions_unmet`。请求、回答两份 schema 由后端 `app/domain/supply/prematch.py` 的模型生成（同上一条的命令），`tests/test_supply_schedule_db.py` 核文件与模型逐字一致 |
