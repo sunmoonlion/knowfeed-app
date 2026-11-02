@@ -15,6 +15,7 @@ not a valid contract upgrade.
 | --- | --- | --- |
 | `knowbase-vocabulary-lock.json` | `knowbase-app/contracts/data-request/v1/vocabulary.json` | 需求、渠道、订阅用的词表副本（`app/domain/supply/vocabulary.py`）：细类与大类、定期报告、事项、版本形态，主体编号的几种写法（`subject_kinds`：证券代码、`org:` 机构编号）与机构编号能采哪些细类（`collectable.org`，政策法规、统计数据）；并列检出 knowbase-app 时 `tests/test_knowbase_vocabulary_lock.py` 核锁与真源一致、副本与真源一致 |
 | `knowbase-chart-lock.json` | `knowbase-app/contracts/data-request/v1/chart-of-accounts.json` | 财报抽表写进 knowbase 标准化层的科目编码照它（`app/application/supply/processing.py` 的 `FIELD_TO_CODE`）；并列检出 knowbase-app 时 `tests/test_knowbase_chart_lock.py` 核锁与真源一致、编码都在真源里 |
+| `knowbase-user-data-lock.json` | `knowbase-app/contracts/user-data/v2/user-data.schema.json` | 供给侧实际发送的事实批和公开引用请求按提供方 schema 验证；公开引用只发 subject/ref，结构化 basis 留在需求记录及 collected 受益人契约中，不混入公开引用。 |
 
 ## 提供方的契约（knowfeed 是真源）
 
