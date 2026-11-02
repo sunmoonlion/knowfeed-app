@@ -31,3 +31,9 @@
 完整回归 1043 passed / 13 skipped；最终逐读法累积及中途撤权补充后，所有受影响四个测试文件 47 passed；ruff/pyright 通过。证据 /tmp/luna-readings-feed-full-final.txt、/tmp/luna-readings-feed-revocation.txt。具体验证先后与剩余并发/版本恢复边界见后端 CHECKPOINT，不宣称整个非公开链验收完成。
 
 本轮不接 Wind、不改部署源、不启动 Jenkins。后续发布由 qwen 按完整差异评审；knowbase 候选还包括先前未发布的 WP-3，不得当作仅本次两字段的改动。
+
+## 2026-11-03 正文读法与公开旧版本补加工
+
+backend df981b2；PDF 按需正文、保留页界，扫描无字不报 text 成功，已有公开资料缺
+所需读法则补加工。62 项隔离 DB/加工/调度回归通过、ruff/pyright 通过。
+#58 独立父仓候选见 fix/supply-confirmation-waiting；不代发版、代确认或复活旧单。
