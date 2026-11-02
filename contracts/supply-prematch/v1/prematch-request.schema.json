@@ -97,10 +97,18 @@
       "description": "一条描述（SDD 0049），同需求单的描述键。",
       "properties": {
         "subject": {
-          "maxLength": 64,
-          "minLength": 1,
-          "title": "Subject",
-          "type": "string"
+          "anyOf": [
+            {
+              "maxLength": 64,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Subject"
         },
         "doc_type": {
           "maxLength": 32,
@@ -164,10 +172,22 @@
           ],
           "default": null,
           "title": "Industry"
+        },
+        "source_query": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Query"
         }
       },
       "required": [
-        "subject",
         "doc_type"
       ],
       "title": "PrematchKeyV1",
