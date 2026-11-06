@@ -23,3 +23,14 @@ not a valid contract upgrade.
 | --- | --- |
 | `supply-status/v1/` | 需求状态推送 `knowfeed-supply-status/v1`（SDD 0045 第 2.5 节「需求状态只由 knowfeed 通知」）：需求项状态每变一次，knowfeed 经发件箱给提这张单的应用发一条，带这张单的汇总状态与每一项。由后端 `app/domain/supply/status_event.py` 的模型生成：在 `knowfeed-backend/app` 下 `python -m app.domain.supply.schema`；`tests/test_supply_status_db.py` 核文件与模型逐字一致。接收端入口 `POST /api/internal/v1/knowfeed/demand-status`，knowfeed 以服务身份调，关系 `supply-status`，scope `<应用>:supply-status`（`contract-manifest.json` 写着）。knowbench、knowlab 的接收端与它们的锁均已做 |
 | `supply-prematch/v1/` | 预切合 `knowfeed-supply-prematch/v1`（SDD 0045 第四节）：确认之前，应用问这几项（描述或网址）这类能取 / 取不到 / 网站待审 / 不满足给的条件、候选渠道与许可档、按队列与限速估的预计时间（秒）；只查来源目录与队列，不问渠道、不看 knowbase。入口 `POST /api/internal/v1/supply/prematch`，同需求接口的关系 `supply-demand`、scope `knowfeed:supply-demand`。应用把回答连同可接受的条件照存进 knowbase 确认的供给条件快照：`supply = {"conditions": {"min_license": "via_expert", "channels": []}, "prematch": <回答>}`，受理时 knowfeed 只核 `conditions`（许可档下限、只用哪几条渠道），候选渠道都不满足的需求项转「无法满足」附 `conditions_unmet`。请求、回答两份 schema 由后端 `app/domain/supply/prematch.py` 的模型生成（同上一条的命令），`tests/test_supply_schedule_db.py` 核文件与模型逐字一致 |
+
+## 持有的锁：各版在用情况（SDD 0052 第三节，2026-11-06 第一次整理）
+
+本仓每份契约只持一版，都在用，没有可退的。退役条件与顺序同 knowbench、knowlab 两仓 `contracts/README.md` 末尾的表。本仓作为提供方出 `supply-prematch/v2`（SDD 0051）时，同一笔提交里写 v1 的退役条件。
+
+| 锁 | 提供方 | 契约 | 状态 |
+| --- | --- | --- | --- |
+| `knowbase-chart-lock.json` | knowbase | 图表 | 在用 |
+| `knowbase-provider-lock.json` | knowbase | `knowfeed-knowbase-artifact/v1` 交付资料 | 在用 |
+| `knowbase-user-data-lock.json` | knowbase | `user-data/v2` | 在用 |
+| `knowbase-vocabulary-lock.json` | knowbase | 描述词表 | 在用 |
